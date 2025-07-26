@@ -62,3 +62,63 @@ The request body must be in JSON format and include the following fields:
       "param": "fullname.firstname",
       "location": "body"
     }
+  ]
+}
+```
+
+## User Login Endpoint Documentation
+
+### Endpoint
+
+`POST /users/login`
+
+### Description
+
+Authenticates an existing user. The endpoint checks the provided credentials, and if valid, returns an authentication token along with the user data.
+
+### Request Body
+
+The request body must be in JSON format and include the following fields:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### Field Requirements
+
+- `email`: **string**, required, must be a valid email address
+- `password`: **string**, required, minimum 6 characters
+
+### Status Codes
+
+- **200 OK**: Login successful
+- **400 Bad Request**: Validation failed (missing or invalid fields)
+- **401 Unauthorized**: Invalid credentials or user not found
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "665c2e2f8e4b2c0012a12345",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": null
+  }
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Invalid credentials"
+}
+```
