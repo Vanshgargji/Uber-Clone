@@ -122,3 +122,84 @@ The request body must be in JSON format and include the following fields:
   "message": "Invalid credentials"
 }
 ```
+
+## User Profile Endpoint Documentation
+
+### Endpoint
+
+`GET /users/profile`
+
+### Description
+
+Returns the authenticated user's profile information. Requires a valid authentication token (JWT) in the request cookies or `Authorization` header.
+
+### Authentication
+
+- Requires JWT token (cookie or `Authorization: Bearer <token>` header)
+
+### Status Codes
+
+- **200 OK**: Profile fetched successfully
+- **401 Unauthorized**: Missing, invalid, or blacklisted token
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "user": {
+    "_id": "665c2e2f8e4b2c0012a12345",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "socketId": null
+  }
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Access denied. No token provided."
+}
+```
+
+---
+
+## User Logout Endpoint Documentation
+
+### Endpoint
+
+`POST /users/logout`
+
+### Description
+
+Logs out the authenticated user by invalidating the token. The user will no longer be able to access protected resources until they log in again.
+
+### Authentication
+
+- Requires JWT token (cookie or `Authorization: Bearer <token>` header)
+
+### Status Codes
+
+- **200 OK**: Logout successful
+- **401 Unauthorized**: Missing, invalid, or blacklisted token
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "message": "Logout successful"
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Access denied. No token provided."
+}
+```
+
