@@ -203,3 +203,92 @@ Logs out the authenticated user by invalidating the token. The user will no long
 }
 ```
 
+## Captain Registration Endpoint Documentation
+
+### Endpoint
+
+`POST /captains/register`
+
+### Description
+
+Registers a new captain (driver) in the system. The endpoint validates the input, hashes the password, creates the captain, and returns an authentication token along with the captain's data.
+
+### Request Body
+
+The request body must be in JSON format and include the following fields:
+
+```json
+{
+  "fullname": {
+    "firstname": "Jane",
+    "lastname": "Smith"
+  },
+  "email": "jane.smith@example.com",
+  "password": "yourpassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+#### Field Requirements
+
+- `fullname.firstname`: **string**, required, minimum 3 characters
+- `fullname.lastname`: **string**, optional, minimum 3 characters if provided
+- `email`: **string**, required, must be a valid email address, unique
+- `password`: **string**, required, minimum 6 characters
+- `vehicle.color`: **string**, required, minimum 3 characters
+- `vehicle.plate`: **string**, required, minimum 3 characters, unique
+- `vehicle.capacity`: **integer**, required, minimum 1
+- `vehicle.vehicleType`: **string**, required, must be one of `car`, `bike`, or `auto`
+
+### Status Codes
+
+- **201 Created**: Captain registered successfully
+- **400 Bad Request**: Validation failed (missing or invalid fields)
+
+### Example Response
+
+**Success (201):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "665c2e2f8e4b2c0012a12345",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "socketId": null,
+    "status": "inactive",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+**Error (400):**
+```json
+{
+  "errors": [
+    {
+      "msg": "Color must be at least 3 characters long",
+      "param": "vehicle.color",
+      "location": "body"
+    }
+  ]
+}
+```
+
