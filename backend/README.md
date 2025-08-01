@@ -292,3 +292,164 @@ The request body must be in JSON format and include the following fields:
 }
 ```
 
+## Captain Login Endpoint Documentation
+
+### Endpoint
+
+`POST /captains/login`
+
+### Description
+
+Authenticates an existing captain (driver). The endpoint checks the provided credentials, and if valid, returns an authentication token along with the captain's data.
+
+### Request Body
+
+The request body must be in JSON format and include the following fields:
+
+```json
+{
+  "email": "jane.smith@example.com",
+  "password": "yourpassword"
+}
+```
+
+#### Field Requirements
+
+- `email`: **string**, required, must be a valid email address
+- `password`: **string**, required, minimum 6 characters
+
+### Status Codes
+
+- **200 OK**: Login successful
+- **400 Bad Request**: Validation failed (missing or invalid fields)
+- **401 Unauthorized**: Invalid credentials or captain not found
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "665c2e2f8e4b2c0012a12345",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "socketId": null,
+    "status": "inactive",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Invalid credentials"
+}
+```
+
+---
+
+## Captain Profile Endpoint Documentation
+
+### Endpoint
+
+`GET /captains/profile`
+
+### Description
+
+Returns the authenticated captain's profile information. Requires a valid authentication token (JWT) in the request cookies or `Authorization` header.
+
+### Authentication
+
+- Requires JWT token (cookie or `Authorization: Bearer <token>` header)
+
+### Status Codes
+
+- **200 OK**: Profile fetched successfully
+- **401 Unauthorized**: Missing, invalid, or blacklisted token
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "captain": {
+    "_id": "665c2e2f8e4b2c0012a12345",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com",
+    "socketId": null,
+    "status": "inactive",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "location": {
+      "lat": null,
+      "lng": null
+    }
+  }
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Access denied. No token provided."
+}
+```
+
+---
+
+## Captain Logout Endpoint Documentation
+
+### Endpoint
+
+`GET /captains/logout`
+
+### Description
+
+Logs out the authenticated captain by blacklisting the current JWT token and clearing the authentication cookie.
+
+### Authentication
+
+- Requires JWT token (cookie or `Authorization: Bearer <token>` header)
+
+### Status Codes
+
+- **200 OK**: Logout successful
+- **401 Unauthorized**: Missing, invalid, or blacklisted token
+
+### Example Response
+
+**Success (200):**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+**Error (401):**
+```json
+{
+  "message": "Access denied. No token provided."
+}
+```
+
